@@ -12,10 +12,11 @@ const port = process.env.PORT;
 app.use(express.json());
 
 app.get('/', (req, res) => {
-    res.send('Hello World!')
+    return res.send('Hello World!')
 })
 
 app.post("/signup", async (req, res) => {
+  try {
     const { name, email, password, role } = req.body;
 
     if(!name || !email || !password || !role) {
@@ -35,12 +36,14 @@ app.post("/signup", async (req, res) => {
 
     // Handle signup logic here
     if(newUser) {
-      res.status(201).send("User signed up");
+      return res.status(201).send("User signed up");
+    } else {
+      return res.status(500).send("Error signing up user");
     }
-
-    else {
-      res.status(500).send("Error signing up user");
-    }
+  } catch (error) {
+    console.error("Error signing up user:", error);
+    return res.status(500).send("Error signing up user");
+  }
 })
 
 app.listen(port, () => {
