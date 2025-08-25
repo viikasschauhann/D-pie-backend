@@ -1,0 +1,152 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             Int             @id @default(autoincrement())
+  name           String
+  email          String          @unique
+  password       String
+  role           Role
+  profileImg     String?
+  createdAt      DateTime        @default(now())
+
+  tutorProfile   TutorProfile?
+  studentProfile StudentProfile?
+}
+
+model TutorProfile {
+  id           Int             @id @default(autoincrement())
+  userId       Int             @unique
+  user         User            @relation(fields: [userId], references: [id])
+
+  bio          String?
+  hourlyRate   Float
+  languages    String[]
+  ratingAvg    Float?           @default(0)
+  totalLessons Int              @default(0)
+
+  subjects      TutorSubject[]
+  availability  Availability[]
+  lessons       Lesson[]
+  reviews       Review[]
+}
+
+model StudentProfile {
+  id          Int             @id @default(autoincrement())
+  userId      Int             @unique
+  user        User            @relation(fields: [userId], references: [id])
+
+  goals             String?
+  preferredSubjects String[]
+
+  lessons     Lesson[]
+  reviews     Review[]
+}
+
+model Subject {
+  id          Int             @id @default(autoincrement())
+  name        String
+  category    String?
+
+  tutors      TutorSubject[]
+  lessons     Lesson[]
+}
+
+model TutorSubject {
+  id        Int           @id @default(autoincrement())
+  tutorId   Int
+  tutor     TutorProfile  @relation(fields: [tutorId], references: [id])
+  subjectId Int
+  subject   Subject       @relation(fields: [subjectId], references: [id])
+}
+
+model Availability {
+  id          Int           @id @default(autoincrement())
+  tutorId     Int
+  tutor       TutorProfile  @relation(fields: [tutorId], references: [id])
+
+  dayOfWeek   String
+  startTime   String
+  endTime     String
+  isRecurring Boolean       @default(true)
+}
+
+model Lesson {
+  id          Int             @id @default(autoincrement())
+  studentId   Int
+  student     StudentProfile  @relation(fields: [studentId], references: [id])
+
+  tutorId     Int
+  tutor       TutorProfile    @relation(fields: [tutorId], references: [id])
+
+  subjectId   Int
+  subject     Subject         @relation(fields: [subjectId], references: [id])
+
+  date        DateTime
+  startTime   String
+  endTime     String
+  status      LessonStatus    @default(PENDING)
+  price       Float
+
+  payment     Payment?
+  review      Review?
+}
+
+model Review {
+  id        Int             @id @default(autoincrement())
+  lessonId  Int             @unique
+  lesson    Lesson          @relation(fields: [lessonId], references: [id])
+
+  studentId Int
+  student   StudentProfile  @relation(fields: [studentId], references: [id])
+
+  tutorId   Int
+  tutor     TutorProfile    @relation(fields: [tutorId], references: [id])
+
+  rating    Int
+  comment   String?
+  createdAt DateTime        @default(now())
+}
+
+model Payment {
+  id        Int          @id @default(autoincrement())
+  lessonId  Int          @unique
+  lesson    Lesson       @relation(fields: [lessonId], references: [id])
+
+  amount    Float
+  method    String
+  status    PaymentStatus @default(PENDING)
+  paidAt    DateTime?
+}
+
+enum Role {
+  STUDENT
+  TUTOR
+  ADMIN
+}
+
+enum LessonStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+}
