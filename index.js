@@ -1,28 +1,22 @@
-import express from 'express';
-import dotenv from 'dotenv';
-import cors from "cors";
-import cookieParser from "cookie-parser";
+import dotenv from "dotenv";
+import connectDB from "./db/index.js";
+import {app} from "./app.js";
 
-dotenv.config();
+dotenv.config({
+    path: './.env'
+});
 
-const app = express();
+connectDB()
+.then(() => { 
+    app.on("error", (error) => {
+        console.log("ERR: ", error);   
+        throw error;      
+    });
 
-const port = process.env.PORT;
-
-app.use(cors({
-    origin: process.env.CORS_ORIGIN,
-    credentials: true
-}));
-
-app.use(express.json({limit: "1mb"}));
-app.use(express.urlencoded({extended: true, limit: "1mb"}));
-app.use(express.static("public"));
-app.use(cookieParser());
-
-app.get('/', (req, res) => {
-    return res.send('Hello World!')
+    app.listen(process.env.PORT || 8000, () => {
+        console.log(`Server is running at port : ${process.env.PORT}`);
+    });
 })
-
-app.listen(port, () => {
-  console.log(`app listening on port ${port}`)
+.catch((err) => {
+    console.log("MONGO DB connection failed !!!", err);
 });
