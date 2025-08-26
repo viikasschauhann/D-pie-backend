@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import { de } from "zod/locales";
 
 const userSchema = new mongoose.Schema({
   name: { 
@@ -17,7 +18,8 @@ const userSchema = new mongoose.Schema({
   },
   role: { 
     type: String, 
-    enum: ["STUDENT", "TUTOR", "ADMIN"], 
+    enum: ["STUDENT", "TUTOR", "ADMIN"],
+    default: "STUDENT", 
     required: true 
   },
   profileImg: { 
@@ -29,6 +31,7 @@ const userSchema = new mongoose.Schema({
   authType: {
     type: String,
     enum: ["LOCAL", "GOOGLE", "FACEBOOK", "APPLE"],
+    default: "LOCAL",
     required: true
   },
   refreshToken: {
