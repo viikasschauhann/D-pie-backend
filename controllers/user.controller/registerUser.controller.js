@@ -1,5 +1,4 @@
 import { User, OTP } from "../../models/index.js";
-import bcrypt from "bcrypt";
 import { signupSchema } from "../../zod/index.js";
 import { asyncHandler, ApiResponse } from "../../utils/index.js";
 
@@ -13,23 +12,13 @@ export const registerUser = asyncHandler(async (req, res) => {
           new ApiResponse(
             400,
             null,
-            'Invalid request data'
+            parsedData.error.format()
           )
         );
     }
 
     const { name, email, password, otp }  = parsedData.data;
 
-    // Check if all details are provided
-    if (!name || !email || !password || !otp) {
-        return res.status(403).json(
-          new ApiResponse(
-            403,
-            null,
-            'All fields are required'
-          )
-        );
-    }
     try {
 
       // Check if user already exists
@@ -58,13 +47,10 @@ export const registerUser = asyncHandler(async (req, res) => {
         );
       }
 
-      const hashedPassword = await bcrypt.hash(password, 5);
-
-    
       await User.create({
         name,
         email,
-        password: hashedPassword
+        password
       });
 
       return res.status(201).json(

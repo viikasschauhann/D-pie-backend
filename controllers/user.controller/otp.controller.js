@@ -12,7 +12,7 @@ export const sendOTP = asyncHandler(async (req, res) => {
         new ApiResponse(
           400,
           null,
-          'Invalid request data'
+          parsedData.error.format()
         )
       );
   }
