@@ -3,10 +3,14 @@
   "version": "1.0.0",
   "main": "index.js",
   "type": "module",
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  },
   "scripts": {
     "dev": "nodemon -r dotenv/config --experimental-json-modules index.js",
     "start": "node index.js",
-    "generate": "prisma generate"
+    "generate": "prisma generate",
+    "seed": "node prisma/seed.js" 
   },
   "keywords": [],
   "author": "",
