@@ -41,9 +41,6 @@ export const loginUser = asyncHandler( (async (req, res) => {
 
     const {email, password} = parsedData.data;
 
-    console.log("Email", email);
-    console.log("Password", password);
-
     try {
         const user = await User.findOne({
             email
@@ -60,8 +57,6 @@ export const loginUser = asyncHandler( (async (req, res) => {
         }
     
         const isPasswordValid = await user.isPasswordCorrect(password);
-
-        console.log("Is Password Valid:", isPasswordValid);
 
         if(!isPasswordValid) {
             return res.status(401).json(
