@@ -2,7 +2,7 @@ import { z } from "zod";
 
 const otpSchema = z.object({
     email: z.string().min(5).max(50).email(),
-});
+}).strict();
 
 const signupSchema = z.object({
     name: z.string().min(1).max(50).nullish(),
@@ -52,15 +52,18 @@ const signupSchema = z.object({
             message: errObj.toString()
         });
     }
-});
+}).strict();
 
 const signinSchema = z.object({
     email: z.string().min(5).max(50).email(),
     password: z.string().min(5).max(50)
-});
+}).strict();
+
+const signoutSchema = z.void();
 
 export {
     signupSchema,
     signinSchema,
-    otpSchema
+    otpSchema,
+    signoutSchema
 }

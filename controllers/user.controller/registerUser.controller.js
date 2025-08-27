@@ -1,23 +1,10 @@
 import { User, OTP } from "../../models/index.js";
-import { signupSchema } from "../../zod/index.js";
 import { asyncHandler, ApiResponse } from "../../utils/index.js";
 
 export const registerUser = asyncHandler(async (req, res) => {
     console.log('Request reached! ', req.body);
 
-    const parsedData = signupSchema.safeParse(req.body);
-
-    if (!parsedData.success) {
-        return res.status(400).json(
-          new ApiResponse(
-            400,
-            null,
-            parsedData.error.format()
-          )
-        );
-    }
-
-    const { name, email, password, otp }  = parsedData.data;
+    const { name, email, password, otp }  = req.body;
 
     try {
 

@@ -1,4 +1,3 @@
-import { signinSchema } from "../../zod/index.js";
 import { User } from "../../models/index.js";
 import { asyncHandler, ApiResponse } from "../../utils/index.js";
 import { cookieOptions } from "../../constants.js";
@@ -26,20 +25,7 @@ export const loginUser = asyncHandler( (async (req, res) => {
     // password check
     // access and refresh token
     // send cookie
-
-    const parsedData = signinSchema.safeParse(req.body);
-
-    if(!parsedData.success) {
-        return res.status(400).json(
-            new ApiResponse(
-                400,
-                null,
-                parsedData.error.format()
-            )
-        );
-    }
-
-    const {email, password} = parsedData.data;
+    const {email, password} = req.body;
 
     try {
         const user = await User.findOne({
