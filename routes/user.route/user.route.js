@@ -20,7 +20,7 @@ import {
     checkOTPSchema, 
     changePasswordSchema,
     getUserDataSchema
-} from "../../zod/index.js";
+} from "../../zod/userSchema.js";
 
 const router = Router();
 
