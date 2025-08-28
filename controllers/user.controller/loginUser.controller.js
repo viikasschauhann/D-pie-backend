@@ -1,22 +1,7 @@
 import { User } from "../../models/index.js";
 import { asyncHandler, ApiResponse } from "../../utils/index.js";
 import { cookieOptions } from "../../constants.js";
-
-const generateAccessAndRefreshTokens = async function(userId) {
-    try {
-        const user = await User.findById(userId);
-        const accessToken = user.generateAccessToken();
-        const refreshToken = user.generateRefreshToken();
-
-        user.refreshToken = refreshToken;
-        await user.save({ validateBeforeSave: false });
-
-        return {accessToken, refreshToken};
-
-    } catch (error) {
-        throw error;
-    }
-}
+import { generateAccessAndRefreshTokens } from "../../utils/index.js";
 
 export const loginUser = asyncHandler( (async (req, res) => {
     // req body -> data

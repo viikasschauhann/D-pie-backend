@@ -14,12 +14,19 @@ export const validateSchema = (schema) => (req, res, next) => {
     next();
   } catch (err) {
       if (err.name === "ZodError") {
-        return res.status(400).json(
-          new ApiResponse(400, null, err.errors?.map(e => ({
-          path: e.path.join("."),  // field name
-          code: e.code,            // type of error
-          message: e.message       // human readable msg
-        })))
+        return res
+        .status(400)
+        .json(
+          new ApiResponse(
+            400, 
+            null, 
+            err.errors && err.errors.length > 0
+            ? err.errors.map(e => ({
+                path: e.path.join("."),
+                code: e.code,
+                message: e.message,
+              })) : "Validation Error"
+          )
         );
       }
 

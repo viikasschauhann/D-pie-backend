@@ -1,13 +1,24 @@
 import { Router } from "express";
 import { 
     sendOTP,
+    sendRefreshOTP,
+    checkOTP,
     registerUser,
     loginUser,
     logoutUser,
-    refreshAccessToken
+    refreshAccessToken,
+    changePassword
 } from "../../controllers/user.controller/index.js";
 import { verifyJWT, validateSchema } from "../../middlewares/index.js";
-import { signupSchema, signinSchema, otpSchema, signoutSchema, refreshTokenSchema } from "../../zod/index.js";
+import { 
+    signupSchema, 
+    signinSchema, 
+    otpSchema, 
+    signoutSchema, 
+    refreshTokenSchema,
+    checkOTPSchema, 
+    changePasswordSchema
+} from "../../zod/index.js";
 
 const router = Router();
 
@@ -20,5 +31,11 @@ router.route("/login").post(validateSchema(signinSchema), loginUser);
 router.route("/logout").post(validateSchema(signoutSchema), verifyJWT, logoutUser);
 
 router.route("/refresh-accessToken").post(validateSchema(refreshTokenSchema), refreshAccessToken);
+
+router.route("/send-refresh-otp").post(validateSchema(otpSchema), sendRefreshOTP);
+
+router.route("/check-otp").post(validateSchema(checkOTPSchema), checkOTP);
+
+router.route("/change-password").post(validateSchema(changePasswordSchema), verifyJWT, changePassword);
 
 export default router;
