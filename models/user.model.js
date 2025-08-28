@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import { de } from "zod/locales";
 
 const userSchema = new mongoose.Schema({
   name: { 
