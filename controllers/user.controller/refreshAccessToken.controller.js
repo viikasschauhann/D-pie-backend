@@ -6,7 +6,7 @@ import { cookieOptions } from "../../constants.js";
 import { generateAccessAndRefreshTokens } from "../../utils/index.js";
 
 export const refreshAccessToken = asyncHandler( async (req, res) => {
-    const incomingRefreshToken = req.cookies?.refreshToken || req.body.refreshToken;
+    const incomingRefreshToken = req.cookies.refreshToken;
 
     if(!incomingRefreshToken) {
         return res.status(401).json(new ApiResponse(401, null, "Unauthorized request"));

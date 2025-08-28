@@ -7,7 +7,8 @@ import {
     loginUser,
     logoutUser,
     refreshAccessToken,
-    changePassword
+    changePassword,
+    getCurrentUser
 } from "../../controllers/user.controller/index.js";
 import { verifyJWT, validateSchema } from "../../middlewares/index.js";
 import { 
@@ -17,7 +18,8 @@ import {
     signoutSchema, 
     refreshTokenSchema,
     checkOTPSchema, 
-    changePasswordSchema
+    changePasswordSchema,
+    getUserDataSchema
 } from "../../zod/index.js";
 
 const router = Router();
@@ -37,5 +39,7 @@ router.route("/send-refresh-otp").post(validateSchema(otpSchema), sendRefreshOTP
 router.route("/check-otp").post(validateSchema(checkOTPSchema), checkOTP);
 
 router.route("/change-password").post(validateSchema(changePasswordSchema), verifyJWT, changePassword);
+
+router.route("/me").get(validateSchema(getUserDataSchema), verifyJWT, getCurrentUser);
 
 export default router;
