@@ -61,9 +61,14 @@ const signinSchema = z.object({
 
 const signoutSchema = z.void();
 
+const refreshTokenSchema = z.object({
+    refreshToken: z.string().min(1).max(500).nullish()
+}).strict();
+
 export {
     signupSchema,
     signinSchema,
     otpSchema,
+    refreshTokenSchema,
     signoutSchema
 }
